@@ -24,7 +24,7 @@ app.use(cors({
 Or update your `.env` on Render:
 ```
 FRONTEND_URL=https://github.com/prodigi101/midnight-brunch
-}));
+;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
