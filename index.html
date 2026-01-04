@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Brunch | Mr. Breakfast Jamaica</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --midnight-blue: #0a1628;
+            --deep-space: #050d1a;
+            --cosmic-teal: #00ffd5;
+            --electric-cyan: #00e5ff;
+            --gold-accent: #ffa500;
+            --white: #ffffff;
+            --cream: #fef6e4;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background: var(--deep-space);
+            color: var(--cream);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Starfield Background */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Cosmic Ribbon Elements */
+        .cosmic-ribbon {
+            position: fixed;
+            width: 300px;
+            height: 600px;
+            background: linear-gradient(135deg, 
+                rgba(0, 255, 213, 0.3) 0%, 
+                rgba(0, 229, 255, 0.2) 50%, 
+                rgba(0, 255, 213, 0.1) 100%);
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 8s infinite ease-in-out;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .ribbon-1 {
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .ribbon-2 {
+            bottom: -100px;
+            right: -100px;
+            animation-delay: 2s;
+        }
+
+        .ribbon-3 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 4s;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        .hero-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--cosmic-teal);
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(3rem, 12vw, 8rem);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 20px;
+            background: linear-gradient(180deg, var(--white) 0%, var(--cosmic-teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: var(--electric-cyan);
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .hero-description {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            max-width: 700px;
+            margin: 0 auto 50px;
+            line-height: 1.8;
+            color: var(--cream);
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        /* Event Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 80px 0;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 213, 0.2);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 213, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--cosmic-teal);
+            box-shadow: 0 20px 60px rgba(0, 255, 213, 0.3);
+        }
+
+        .detail-card:hover::before {
+            left: 100%;
+        }
+
+        .detail-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--cosmic-teal);
+            margin-bottom: 10px;
+        }
+
+        .detail-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        /* Menu Section */
+        .menu-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--cosmic-teal) 0%, var(--electric-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--cream);
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .menu-item {
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.8) 0%, rgba(5, 13, 26, 0.9) 100%);
+            border: 2px solid rgba(0, 255, 213, 0.2);
+            border-radius: 25px;
+            padding: 40px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 213, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .menu-item:hover {
+            transform: scale(1.05);
+            border-color: var(--cosmic-teal);
+            box-shadow: 0 20px 60px rgba(0, 255, 213, 0.4);
+        }
+
+        .menu-item:hover::after {
+            opacity: 1;
+        }
+
+        .course-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--cosmic-teal);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .course-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--white);
+            position: relative;
+            z-index: 1;
+        }
+
+        .course-description {
+            font-size: 1rem;
+            color: var(--cream);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Pre-Order Form */
+        .preorder-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(0, 255, 213, 0.05) 0%, rgba(0, 229, 255, 0.05) 100%);
+            border-top: 1px solid rgba(0, 255, 213, 0.2);
+            border-bottom: 1px solid rgba(0, 255, 213, 0.2);
+        }
+
+        .form-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(10, 22, 40, 0.8);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 255, 213, 0.3);
+            border-radius: 30px;
+            padding: 60px 40px;
+            box-shadow: 0 30px 80px rgba(0, 255, 213, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .form-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--cosmic-teal);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 213, 0.3);
+            border-radius: 15px;
+            color: var(--white);
+            font-size: 1rem;
+            font-family: 'Playfair Display', serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--cosmic-teal);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 30px rgba(0, 255, 213, 0.2);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-select option {
+            background: var(--midnight-blue);
+            color: var(--white);
+        }
+
+        .price-display {
+            background: rgba(0, 255, 213, 0.1);
+            border: 2px solid var(--cosmic-teal);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .price-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--cosmic-teal);
+            margin-bottom: 10px;
+        }
+
+        .price-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--white);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 25px;
+            background: linear-gradient(135deg, var(--cosmic-teal) 0%, var(--electric-cyan) 100%);
+            border: none;
+            border-radius: 15px;
+            color: var(--deep-space);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 255, 213, 0.5);
+        }
+
+        .submit-btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        /* Error Message */
+        .error-message {
+            display: none;
+            background: rgba(255, 82, 82, 0.2);
+            border: 2px solid #ff5252;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #ff8a80;
+            text-align: center;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, rgba(0, 255, 213, 0.2) 0%, rgba(0, 229, 255, 0.2) 100%);
+            border: 2px solid var(--cosmic-teal);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 30px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--cosmic-teal);
+            margin-bottom: 15px;
+        }
+
+        .success-text {
+            font-size: 1.1rem;
+            color: var(--cream);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 255, 213, 0.2);
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--cosmic-teal);
+            margin-bottom: 20px;
+        }
+
+        .footer-info {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--cream);
+        }
+
+        .footer-address {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .social-link {
+            color: var(--cosmic-teal);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--electric-cyan);
+            transform: scale(1.2);
+        }
+
+        .footer-copyright {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                letter-spacing: -1px;
+            }
+
+            .hero-subtitle {
+                letter-spacing: 4px;
+            }
+
+            .form-container {
+                padding: 40px 25px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .loading.show {
+            display: flex;
+        }
+
+        .loading-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--cosmic-teal);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Starfield Background -->
+    <div class="starfield" id="starfield"></div>
+
+    <!-- Cosmic Ribbons -->
+    <div class="cosmic-ribbon ribbon-1"></div>
+    <div class="cosmic-ribbon ribbon-2"></div>
+    <div class="cosmic-ribbon ribbon-3"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">Mr. Breakfast Presents</div>
+            <h1 class="hero-title">MIDNIGHT<br>Brunch</h1>
+            <p class="hero-subtitle">A High Energy Night Time Experience</p>
+            <p class="hero-description">
+                Step into the cosmos for an unforgettable evening where breakfast meets the midnight hour. 
+                Indulge in a 3-course inclusive brunch experience that defies convention and celebrates flavor.
+            </p>
+        </div>
+    </section>
+
+    <!-- Event Details -->
+    <section class="container">
+        <div class="details-grid">
+            <div class="detail-card">
+                <div class="detail-icon">📅</div>
+                <div class="detail-label">Date</div>
+                <div class="detail-value">Saturday<br>March 7, 2026</div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-icon">⏰</div>
+                <div class="detail-label">Time</div>
+                <div class="detail-value">7:00 PM<br>to 1:00 AM</div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-icon">📍</div>
+                <div class="detail-label">Location</div>
+                <div class="detail-value">17 Holborn Road<br>Kingston</div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-icon">🍽️</div>
+                <div class="detail-label">Experience</div>
+                <div class="detail-value">3-Course<br>Inclusive</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu-section">
+        <div class="container">
+            <h2 class="section-title">The Experience</h2>
+            <p class="section-subtitle">
+                Three carefully crafted courses designed to take your taste buds on a cosmic journey
+            </p>
+            <div class="menu-items">
+                <div class="menu-item">
+                    <div class="course-number">01</div>
+                    <h3 class="course-title">Stellar Starters</h3>
+                    <p class="course-description">
+                        Begin your journey with artfully crafted appetizers that awaken the palate. 
+                        From savory bites to fresh selections, each starter sets the stage for the adventure ahead.
+                    </p>
+                </div>
+                <div class="menu-item">
+                    <div class="course-number">02</div>
+                    <h3 class="course-title">Midnight Main</h3>
+                    <p class="course-description">
+                        Our signature breakfast creations reimagined for the night. Hearty portions, 
+                        bold flavors, and the comfort of morning favorites served under the stars.
+                    </p>
+                </div>
+                <div class="menu-item">
+                    <div class="course-number">03</div>
+                    <h3 class="course-title">Cosmic Finale</h3>
+                    <p class="course-description">
+                        Complete your experience with decadent desserts and sweet indulgences. 
+                        The perfect ending to an extraordinary evening of flavors and memories.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pre-Order Form -->
+    <section class="preorder-section">
+        <div class="container">
+            <h2 class="section-title">Secure Your Spot</h2>
+            <p class="section-subtitle">
+                Pre-order now to guarantee your place at this exclusive event. Limited seats available.
+            </p>
+            
+            <div class="form-container">
+                <div class="error-message" id="errorMessage"></div>
+
+                <form id="preorderForm">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" class="form-input" required placeholder="Enter your name">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" class="form-input" required placeholder="your@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" required placeholder="876-XXX-XXXX">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="guests">Number of Guests *</label>
+                        <select id="guests" name="guests" class="form-select" required>
+                            <option value="">Select number of guests</option>
+                            <option value="1">1 Guest</option>
+                            <option value="2">2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                            <option value="5">5 Guests</option>
+                            <option value="6">6 Guests</option>
+                            <option value="7">7 Guests</option>
+                            <option value="8">8 Guests</option>
+                        </select>
+                    </div>
+
+                    <div class="price-display">
+                        <div class="price-label">Total Amount</div>
+                        <div class="price-amount" id="totalPrice">$0.00</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="dietary">Dietary Requirements or Special Requests</label>
+                        <textarea id="dietary" name="dietary" class="form-textarea" placeholder="Let us know if you have any dietary restrictions or special requirements..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">Reserve My Spot</button>
+
+                    <div class="loading" id="loading">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                </form>
+
+                <div class="success-message" id="successMessage">
+                    <div class="success-icon">✨</div>
+                    <h3 class="success-title">Reservation Confirmed!</h3>
+                    <p class="success-text">
+                        Thank you for your pre-order! We've sent a confirmation email with all the details. 
+                        Get ready for an unforgettable Midnight Brunch experience!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3 class="footer-title">Mr. Breakfast Jamaica</h3>
+            <p class="footer-info">The Ultimate Breakfast Destination</p>
+            <p class="footer-address">17 Holborn Road, Kingston</p>
+            
+            <div class="social-links">
+                <a href="#" class="social-link">📷 Instagram</a>
+                <a href="#" class="social-link">📱 WhatsApp</a>
+                <a href="#" class="social-link">📧 Email</a>
+            </div>
+
+            <p class="footer-copyright">
+                © 2026 Mr. Breakfast Jamaica. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration - Update this with your backend URL
+        const API_URL = 'http://localhost:3000/api';
+        const PRICE_PER_PERSON = 7000; // Should match backend configuration
+
+        // Generate starfield
+        function createStarfield() {
+            const starfield = document.getElementById('starfield');
+            const numStars = 200;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                
+                starfield.appendChild(star);
+            }
+        }
+
+        createStarfield();
+
+        // Price calculator
+        const guestsSelect = document.getElementById('guests');
+        const totalPriceDisplay = document.getElementById('totalPrice');
+
+        guestsSelect.addEventListener('change', function() {
+            const numGuests = parseInt(this.value) || 0;
+            const total = numGuests * PRICE_PER_PERSON;
+            totalPriceDisplay.textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        });
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            
+            // Scroll to error
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        // Form submission
+        const form = document.getElementById('preorderForm');
+        const loading = document.getElementById('loading');
+        const successMessage = document.getElementById('successMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                guests: document.getElementById('guests').value,
+                dietary: document.getElementById('dietary').value.trim()
+            };
+
+            // Basic validation
+            if (!formData.name || !formData.email || !formData.phone || !formData.guests) {
+                showError('Please fill in all required fields');
+                return;
+            }
+
+            // Disable submit button and show loading
+            submitBtn.disabled = true;
+            loading.classList.add('show');
+
+            try {
+                // Send to backend API
+                const response = await fetch(`${API_URL}/preorder`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                // Hide loading
+                loading.classList.remove('show');
+
+                if (response.ok && result.success) {
+                    // Success! Hide form and show success message
+                    form.style.display = 'none';
+                    successMessage.classList.add('show');
+
+                    // Log result
+                    console.log('Pre-order submitted successfully:', result);
+
+                    // Optional: Send to WhatsApp as backup
+                    if (result.emailsSent && !result.emailsSent.customer) {
+                        // If email failed, open WhatsApp
+                        const whatsappMessage = `*MIDNIGHT BRUNCH PRE-ORDER*%0A%0A` +
+                            `Name: ${formData.name}%0A` +
+                            `Email: ${formData.email}%0A` +
+                            `Phone: ${formData.phone}%0A` +
+                            `Guests: ${formData.guests}%0A` +
+                            `Total: ${totalPriceDisplay.textContent}%0A` +
+                            `Dietary Requirements: ${formData.dietary || 'None'}`;
+                        
+                        // Update with your actual WhatsApp number
+                        const whatsappNumber = '18765551234';
+                        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+                        window.open(whatsappUrl, '_blank');
+                    }
+
+                } else {
+                    // Error from backend
+                    showError(result.error || 'Failed to submit pre-order. Please try again.');
+                    submitBtn.disabled = false;
+                }
+
+            } catch (error) {
+                // Network or other error
+                console.error('Error submitting pre-order:', error);
+                loading.classList.remove('show');
+                showError('Unable to connect to the server. Please check your connection and try again.');
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
