@@ -11,20 +11,18 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-    origin: [
-        'http://127.0.0.1:5500', 
-        'http://localhost:5500',
-        'https://github.com/prodigi101/midnight-brunch'  // Add your GitHub Pages URL
-    ],
+    origin: process.env.FRONTEND_URL || '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
 ```
 
 Or update your `.env` on Render:
 ```
-FRONTEND_URL=https://github.com/prodigi101/midnight-brunch
-;
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
