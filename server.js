@@ -27,13 +27,6 @@ const db = new sqlite3.Database('./preorders.db', (err) => {
         console.log('✓ Connected to SQLite database');
         initializeDatabase();
     }
-const db = new sqlite3.Database('./preorders.db', (err) => {
-    if (err) {
-        console.error('Error opening database:', err.message);
-    } else {
-        console.log('✓ Connected to SQLite database');
-        initializeDatabase();
-    }
 });
 
 // Create tables if they don't exist
@@ -79,11 +72,11 @@ function initializeDatabase() {
     });
 }
 
-// Email transporter setup (using Gmail as example)
+// Email transporter setup
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
-    secure: false, // true for 465, false for other ports
+    secure: false,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -260,7 +253,6 @@ async function sendConfirmationEmails(preorder) {
         await transporter.sendMail(customerMailOptions);
         results.customer.success = true;
 
-        // Log email
         db.run(`INSERT INTO email_log (preorder_id, recipient, subject, status) VALUES (?, ?, ?, ?)`,
             [preorder.id, preorder.email, customerMailOptions.subject, 'sent']);
 
@@ -268,7 +260,6 @@ async function sendConfirmationEmails(preorder) {
         console.error('Error sending customer email:', error);
         results.customer.error = error.message;
         
-        // Log error
         db.run(`INSERT INTO email_log (preorder_id, recipient, subject, status, error_message) VALUES (?, ?, ?, ?, ?)`,
             [preorder.id, preorder.email, 'Customer Confirmation', 'failed', error.message]);
     }
@@ -285,7 +276,6 @@ async function sendConfirmationEmails(preorder) {
         await transporter.sendMail(restaurantMailOptions);
         results.restaurant.success = true;
 
-        // Log email
         db.run(`INSERT INTO email_log (preorder_id, recipient, subject, status) VALUES (?, ?, ?, ?)`,
             [preorder.id, process.env.RESTAURANT_EMAIL, restaurantMailOptions.subject, 'sent']);
 
@@ -293,7 +283,6 @@ async function sendConfirmationEmails(preorder) {
         console.error('Error sending restaurant email:', error);
         results.restaurant.error = error.message;
 
-        // Log error
         db.run(`INSERT INTO email_log (preorder_id, recipient, subject, status, error_message) VALUES (?, ?, ?, ?, ?)`,
             [preorder.id, process.env.RESTAURANT_EMAIL, 'Restaurant Notification', 'failed', error.message]);
     }
@@ -301,11 +290,7 @@ async function sendConfirmationEmails(preorder) {
     return results;
 }
 
-// ============================================
-// API ROUTES
-// ============================================
-
-// Health check
+// API Routes
 app.get('/api/health', (req, res) => {
     res.json({ 
         status: 'ok', 
@@ -314,11 +299,9 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Submit pre-order
 app.post('/api/preorder', async (req, res) => {
     const { name, email, phone, guests, dietary } = req.body;
 
-    // Validation
     if (!name || !email || !phone || !guests) {
         return res.status(400).json({
             success: false,
@@ -334,11 +317,9 @@ app.post('/api/preorder', async (req, res) => {
         });
     }
 
-    // Calculate total
-    const pricePerPerson = parseFloat(process.env.PRICE_PER_PERSON) || 7000;
+    const pricePerPerson = parseFloat(process.env.PRICE_PER_PERSON) || 5500;
     const total = guestsNum * pricePerPerson;
 
-    // Insert into database
     const sql = `INSERT INTO preorders (name, email, phone, guests, dietary, total) VALUES (?, ?, ?, ?, ?, ?)`;
     
     db.run(sql, [name, email, phone, guestsNum, dietary || null, total], async function(err) {
@@ -352,7 +333,6 @@ app.post('/api/preorder', async (req, res) => {
 
         const preorderId = this.lastID;
 
-        // Get the complete preorder data
         db.get('SELECT * FROM preorders WHERE id = ?', [preorderId], async (err, preorder) => {
             if (err) {
                 console.error('Error retrieving preorder:', err.message);
@@ -362,7 +342,6 @@ app.post('/api/preorder', async (req, res) => {
                 });
             }
 
-            // Send confirmation emails
             const emailResults = await sendConfirmationEmails(preorder);
 
             res.json({
@@ -386,7 +365,6 @@ app.post('/api/preorder', async (req, res) => {
     });
 });
 
-// Get all pre-orders (admin view)
 app.get('/api/preorders', (req, res) => {
     const sql = 'SELECT * FROM preorders ORDER BY created_at DESC';
     
@@ -407,7 +385,6 @@ app.get('/api/preorders', (req, res) => {
     });
 });
 
-// Get single pre-order by ID
 app.get('/api/preorders/:id', (req, res) => {
     const { id } = req.params;
     
@@ -434,7 +411,6 @@ app.get('/api/preorders/:id', (req, res) => {
     });
 });
 
-// Update pre-order status
 app.put('/api/preorders/:id/status', (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
@@ -473,7 +449,6 @@ app.put('/api/preorders/:id/status', (req, res) => {
     });
 });
 
-// Get statistics
 app.get('/api/stats', (req, res) => {
     const queries = {
         totalOrders: 'SELECT COUNT(*) as count FROM preorders',
@@ -510,7 +485,6 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-// Delete pre-order (admin only - use with caution)
 app.delete('/api/preorders/:id', (req, res) => {
     const { id } = req.params;
     
@@ -537,7 +511,6 @@ app.delete('/api/preorders/:id', (req, res) => {
     });
 });
 
-// 404 handler
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -545,7 +518,6 @@ app.use((req, res) => {
     });
 });
 
-// Error handler
 app.use((err, req, res, next) => {
     console.error('Server error:', err);
     res.status(500).json({
@@ -554,7 +526,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Start server
 app.listen(PORT, () => {
     console.log(`
 ╔════════════════════════════════════════════╗
@@ -578,7 +549,6 @@ app.listen(PORT, () => {
     `);
 });
 
-// Graceful shutdown
 process.on('SIGINT', () => {
     console.log('\n\nShutting down gracefully...');
     db.close((err) => {
