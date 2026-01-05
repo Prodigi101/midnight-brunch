@@ -11,7 +11,11 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: [
+        'https://prodigi101.github.io',
+        'http://127.0.0.1:5500',
+        'http://localhost:5500'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
