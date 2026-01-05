@@ -18,16 +18,15 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-```
-
-Or update your `.env` on Render:
-```
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
 
 // Initialize SQLite Database
+const db = new sqlite3.Database('./preorders.db', (err) => {
+    if (err) {
+        console.error('Error opening database:', err.message);
+    } else {
+        console.log('✓ Connected to SQLite database');
+        initializeDatabase();
+    }
 const db = new sqlite3.Database('./preorders.db', (err) => {
     if (err) {
         console.error('Error opening database:', err.message);
