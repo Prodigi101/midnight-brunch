@@ -27,7 +27,7 @@
         body {
             font-family: 'Playfair Display', serif;
             background: var(--deep-space);
-            color: var(--white);
+            color: var(--cream);
             overflow-x: hidden;
             position: relative;
         }
@@ -178,7 +178,7 @@
             max-width: 700px;
             margin: 0 auto 50px;
             line-height: 1.8;
-            color: var(--white);
+            color: var(--cream);
             animation: fadeInUp 1s ease-out 0.6s both;
         }
 
@@ -264,7 +264,7 @@
 
         .section-subtitle {
             font-size: 1.2rem;
-            color: var(--white);
+            color: var(--cream);
             margin-bottom: 60px;
             max-width: 600px;
             margin-left: auto;
@@ -331,7 +331,7 @@
 
         .course-description {
             font-size: 1rem;
-            color: var(--white);
+            color: var(--cream);
             line-height: 1.6;
             position: relative;
             z-index: 1;
@@ -539,7 +539,7 @@
 
         .success-text {
             font-size: 1.1rem;
-            color: var(--white);
+            color: var(--cream);
             line-height: 1.6;
         }
 
@@ -566,7 +566,7 @@
         .footer-info {
             font-size: 1.1rem;
             margin-bottom: 15px;
-            color: var(--white);
+            color: var(--cream);
         }
 
         .footer-address {
@@ -587,6 +587,7 @@
             color: var(--cosmic-teal);
             font-size: 1.5rem;
             transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .social-link:hover {
@@ -807,7 +808,7 @@
                     <div class="success-icon">✨</div>
                     <h3 class="success-title">Reservation Confirmed!</h3>
                     <p class="success-text">
-                        Thank you for your pre-order! We've sent a confirmation email with all the details. 
+                        Thank you for your pre-order! We'll send you a confirmation email shortly with all the details. 
                         Get ready for an unforgettable Midnight Brunch experience!
                     </p>
                 </div>
@@ -835,9 +836,9 @@
     </footer>
 
     <script>
-        // Configuration - Update this with your backend URL
-        const API_URL = 'https://midnight-brunch.onrender.com/api';
-        const PRICE_PER_PERSON = 7000; // Should match backend configuration
+        // Configuration - UPDATE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwnteSqjUU_fvyUP5_zHBVl2HyUqY7BF6HNRQ41kaBGUzxOvzo1FkVL7T18j9c062Hv5Q/exec';
+        const PRICE_PER_PERSON = 5500;
 
         // Generate starfield
         function createStarfield() {
@@ -880,10 +881,8 @@
             errorDiv.textContent = message;
             errorDiv.classList.add('show');
             
-            // Scroll to error
             errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
-            // Auto-hide after 5 seconds
             setTimeout(() => {
                 errorDiv.classList.remove('show');
             }, 5000);
@@ -904,7 +903,9 @@
                 email: document.getElementById('email').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
                 guests: document.getElementById('guests').value,
-                dietary: document.getElementById('dietary').value.trim()
+                dietary: document.getElementById('dietary').value.trim(),
+                total: totalPriceDisplay.textContent,
+                timestamp: new Date().toISOString()
             };
 
             // Basic validation
@@ -918,56 +919,27 @@
             loading.classList.add('show');
 
             try {
-                // Send to backend API
-                const response = await fetch(`${API_URL}/preorder`, {
+                // Send to Google Sheets
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
+                    mode: 'no-cors', // Important for Google Apps Script
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(formData)
                 });
 
-                const result = await response.json();
-
-                // Hide loading
+                // With no-cors mode, we can't read the response, but if no error was thrown, it worked
                 loading.classList.remove('show');
+                form.style.display = 'none';
+                successMessage.classList.add('show');
 
-                if (response.ok && result.success) {
-                    // Success! Hide form and show success message
-                    form.style.display = 'none';
-                    successMessage.classList.add('show');
-
-                    // Log result
-                    console.log('Pre-order submitted successfully:', result);
-
-                    // Optional: Send to WhatsApp as backup
-                    if (result.emailsSent && !result.emailsSent.customer) {
-                        // If email failed, open WhatsApp
-                        const whatsappMessage = `*MIDNIGHT BRUNCH PRE-ORDER*%0A%0A` +
-                            `Name: ${formData.name}%0A` +
-                            `Email: ${formData.email}%0A` +
-                            `Phone: ${formData.phone}%0A` +
-                            `Guests: ${formData.guests}%0A` +
-                            `Total: ${totalPriceDisplay.textContent}%0A` +
-                            `Dietary Requirements: ${formData.dietary || 'None'}`;
-                        
-                        // Update with your actual WhatsApp number
-                        const whatsappNumber = '18765551234';
-                        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-                        window.open(whatsappUrl, '_blank');
-                    }
-
-                } else {
-                    // Error from backend
-                    showError(result.error || 'Failed to submit pre-order. Please try again.');
-                    submitBtn.disabled = false;
-                }
+                console.log('Pre-order submitted successfully:', formData);
 
             } catch (error) {
-                // Network or other error
                 console.error('Error submitting pre-order:', error);
                 loading.classList.remove('show');
-                showError('Unable to connect to the server. Please check your connection and try again.');
+                showError('Unable to submit your pre-order. Please try again or contact us directly.');
                 submitBtn.disabled = false;
             }
         });
